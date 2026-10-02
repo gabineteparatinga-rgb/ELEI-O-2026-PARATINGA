@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ActiveTab, VotoRecord, PresidenteRecord, CandidatoRecord, SecaoRecord } from './types';
 import { initialVotosData, initialPresidenteData, initialSecoesData } from './utils/excel';
 import { Navbar } from './components/Navbar';
@@ -17,10 +17,60 @@ import { AiAssistantDrawer } from './components/AiAssistantDrawer';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
-  const [votos, setVotos] = useState<VotoRecord[]>(initialVotosData);
-  const [presidente, setPresidente] = useState<PresidenteRecord[]>(initialPresidenteData);
-  const [candidatos, setCandidatos] = useState<CandidatoRecord[]>([]);
-  const [secoes, setSecoes] = useState<SecaoRecord[]>(initialSecoesData);
+  
+  // Database persistence via localStorage with fallback to initial data
+  const [votos, setVotos] = useState<VotoRecord[]>(() => {
+    try {
+      const saved = localStorage.getItem('urna_votos');
+      return saved ? JSON.parse(saved) : initialVotosData;
+    } catch {
+      return initialVotosData;
+    }
+  });
+
+  const [presidente, setPresidente] = useState<PresidenteRecord[]>(() => {
+    try {
+      const saved = localStorage.getItem('urna_presidente');
+      return saved ? JSON.parse(saved) : initialPresidenteData;
+    } catch {
+      return initialPresidenteData;
+    }
+  });
+
+  const [candidatos, setCandidatos] = useState<CandidatoRecord[]>(() => {
+    try {
+      const saved = localStorage.getItem('urna_candidatos');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [secoes, setSecoes] = useState<SecaoRecord[]>(() => {
+    try {
+      const saved = localStorage.getItem('urna_secoes');
+      return saved ? JSON.parse(saved) : initialSecoesData;
+    } catch {
+      return initialSecoesData;
+    }
+  });
+
+  // Save changes to localStorage (database persistence)
+  useEffect(() => {
+    localStorage.setItem('urna_votos', JSON.stringify(votos));
+  }, [votos]);
+
+  useEffect(() => {
+    localStorage.setItem('urna_presidente', JSON.stringify(presidente));
+  }, [presidente]);
+
+  useEffect(() => {
+    localStorage.setItem('urna_candidatos', JSON.stringify(candidatos));
+  }, [candidatos]);
+
+  useEffect(() => {
+    localStorage.setItem('urna_secoes', JSON.stringify(secoes));
+  }, [secoes]);
 
   // Modals state
   const [isNewRecordOpen, setIsNewRecordOpen] = useState(false);
