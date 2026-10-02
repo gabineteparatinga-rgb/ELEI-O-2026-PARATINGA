@@ -1,0 +1,7 @@
+{
+  "name": "UrnaAI - Gestão Eleitoral & VOTOS.xlsx",
+  "description": "Sistema especialista em gestão de dados eleitorais, planilhas VOTOS.xlsx, cadastro de candidatos e análise inteligente com IA.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
